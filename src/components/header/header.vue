@@ -1,13 +1,16 @@
 <template>
-
+    <div class="header">
+        head
+    </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
     export default {
-        name: "header"
+        name: "v-header"
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+    .header
+      display:block
 </style>
