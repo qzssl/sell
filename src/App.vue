@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
       <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
       <div class="tab-item">
@@ -22,8 +22,10 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
   import header from './components/header/header.vue';
+  import api from './api/api';
+  const ERR_OK = 0;
   //简写  header:header
   export default {
       data() {
@@ -31,7 +33,19 @@
               seller:{}
           }
       },
+      created() {
+          var self =this;
+          api.get('/api/seller')
+              .then((res) => {
+                  window.console.log(res)
+                  if (res.data.errno===ERR_OK){
+                      self.seller=res.data.data;
 
+                  }
+
+              })
+          // window.console.log(api)
+      },
       components:{
           'v-header':header
       }

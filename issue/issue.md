@@ -41,4 +41,19 @@ new Vue({
 //想要导航到的路由
 router.push({path:'/goods'});
 ```
-#### 1px
+#### axios不能通过Vue.use(axios)的方式引入, 如果想在所有组件中直接使用axios, 可以这样设置
+```
+import axios from 'axios';
+Vue.prototype.$http = axios;
+```
+#### 使用 icon 字体图标出现小方块问题
+修改路径
+```
+@font-face
+  font-family: 'sell-icon'
+  src:  url('../../common/fonts/sell-icon.eot?ze40eg')
+  src:  url('../../common/fonts/sell-icon.eot?ze40eg#iefix') format('embedded-opentype'),
+          url('../../common/fonts/sell-icon.ttf?ze40eg') format('truetype'),
+          url('../../common/fonts/sell-icon.woff?ze40eg') format('woff'),
+          url('../../common/fonts/sell-icon.svg?ze40eg#sell-icon') format('svg')
+```

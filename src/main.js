@@ -1,9 +1,10 @@
 import Vue from 'vue';
 import App from './App.vue';
 import VueRouter from 'vue-router';
+import Axios from 'axios';
 //注册插件
 Vue.use(VueRouter);
-
+// Vue.prototype.$http = Axios;
 import './common/stylus/base.styl'
 
 //1.引入路由组件
