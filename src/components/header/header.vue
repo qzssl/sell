@@ -224,7 +224,7 @@
             background: rgba(7, 17, 27, 0.8)
             backdrop-filter :blur(10px)
             &.fade-enter-active,&.fade-leave-active
-                transition:opacity 2s;
+                transition:opacity 0.5s;
             &.fade-enter,&.fade-leave-to//进入过渡的开始状态,离开过渡的结束状态
                 opacity :0
             .detail-wrapper

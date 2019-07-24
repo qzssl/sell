@@ -42,9 +42,10 @@
                       self.seller=res.data.data;
 
                   }
-
               })
-          // window.console.log(api)
+              .catch((err) => {
+                  window.console.log(err)
+              })
       },
       components:{
           'v-header':header
