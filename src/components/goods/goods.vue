@@ -1,17 +1,17 @@
 <template>
     <div class="goods">
-        <div class="menu-wrapper">
+        <div class="menu-wrapper" ref="menuWrapper" >
             <ul>
-                <li v-for="(item,index) in goods" :key="index" class="menu-item">
+                <li v-for="(item,index) in goods" :key="index" @click="selectMenu(index,$event)" class="menu-item" :class="{'current':currentIndex==index}">
                     <span class="text border-1px">
                         <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
                     </span>
                 </li>
             </ul>
         </div>
-        <div class="foods-wrapper">
+        <div class="foods-wrapper" ref="foodsWrapper">
             <ul>
-                <li v-for="(item,index) in goods" :key="index" class="foods-list">
+                <li v-for="(item,index) in goods" :key="index" class="foods-list foods-list-hook">
                     <h1 class="title">{{item.name}}</h1>
                     <ul>
                         <li v-for="(food,key) in item.foods" class="food-item border-1px" :key="key">
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+    import BScroll from 'better-scroll';
     import api from '../../api/api';
     const ERR_OK = 0;
     export default {
@@ -51,22 +52,69 @@
         data(){
             return{
                 goods:[],
-                classMap:['decrease','discount','guarantee','invoice','special']
+                classMap:['decrease','discount','guarantee','invoice','special'],
+                listHeight:[],
+                scrollY:0
+            }
+        },
+        computed:{
+            currentIndex(){
+                for (let i=0;i<this.listHeight.length;i++){
+                    let height1 = this.listHeight[i];
+                    let height2 = this.listHeight[i+1];
+                    if (!height2) return;
+                    if (this.scrollY >= height1 && this.scrollY < height2){
+                        return i;
+                    }
+
+                }
+                return 0;
             }
         },
         created(){
             let self = this;
             api.get('/api/goods')
                 .then((res) => {
-
                     if (res.data.errno===ERR_OK){
                         self.goods=res.data.data;
-                        // window.console.log(res);
+                        this.$nextTick(() => {
+                            this._initScroll();
+                            //计算右侧每个类型高度
+                            this._calculateHeight()
+                        });
                     }
                 })
                 .catch((err) => {
                     window.console.log(err)
                 })
+        },
+        methods:{
+            selectMenu:function(index,event){
+                // if (event._constructed)return;
+                let foodsList = this.$refs.foodsWrapper.getElementsByClassName('foods-list-hook');
+                let el = foodsList[index];
+                this.foodsScroll.scrollToElement(el,300);
+                console.log(index,event)
+            },
+            _initScroll:function () {
+                this.menuScroll = new BScroll(this.$refs.menuWrapper,{
+                    click:true
+                });
+                this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{probeType:3});
+                this.foodsScroll.on('scroll',(pos) => {
+                    this.scrollY =Math.abs(Math.round(pos.y));
+                });
+            },
+            _calculateHeight:function () {
+                let foodsList = this.$refs.foodsWrapper.getElementsByClassName('foods-list-hook');
+                let height = 0;
+                this.listHeight.push(height);
+                for (let i=0;i<foodsList.length;i++){
+                    let item = foodsList[i];
+                    height += item.clientHeight;
+                    this.listHeight.push(height)
+                }
+            }
         }
     };
 </script>
@@ -90,6 +138,14 @@
                 width:56px
                 line-height:14px
                 padding:0 12px
+                &.current
+                    position: relative
+                    margin-top: -1px
+                    z-index: 10
+                    background: #fff
+                    font-weight:700
+                    .text
+                        border-bottom :none
                 .icon
                     vertical-align :top
                     width: 12px
@@ -149,6 +205,7 @@
                         line-height:10px
                     .desc
                         margin-bottom: 8px
+                        line-height:12px
                     .extra
                         .count
                             margin-right:12px
