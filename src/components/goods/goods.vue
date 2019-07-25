@@ -35,6 +35,7 @@
                 </li>
             </ul>
         </div>
+        <shop-cart v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
     </div>
 
 </template>
@@ -42,6 +43,7 @@
 <script>
     import BScroll from 'better-scroll';
     import api from '../../api/api';
+    import shopCart from '../shopcart/shopcart.vue';
     const ERR_OK = 0;
     export default {
         props:{
@@ -56,6 +58,9 @@
                 listHeight:[],
                 scrollY:0
             }
+        },
+        components:{
+            shopCart
         },
         computed:{
             currentIndex(){
