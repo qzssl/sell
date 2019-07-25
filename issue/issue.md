@@ -57,3 +57,25 @@ Vue.prototype.$http = axios;
           url('../../common/fonts/sell-icon.woff?ze40eg') format('woff'),
           url('../../common/fonts/sell-icon.svg?ze40eg#sell-icon') format('svg')
 ```
+#### 动画 transition要放在需要的v-show元素外面
+>错误：
+```
+<div class="cart-decrease" @click="decreaseCart" v-show="food.count>0">
+    <transition name="move">
+        <span class="inner icon-remove_circle_outline">
+
+        </span>
+    </transition>
+</div>
+```
+>正确：
+```
+<transition name="move">
+    <div class="cart-decrease" @click="decreaseCart" v-show="food.count>0">
+        <span class="inner icon-remove_circle_outline">
+
+        </span>
+    </div>
+ </transition>
+```
+

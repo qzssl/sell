@@ -29,13 +29,16 @@
                                     <span class="now">￥{{food.price}}</span>
                                     <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                                 </div>
+                                <div class="cartcontrol-wrapper">
+                                    <cart-control :food="food"></cart-control>
+                                </div>
                             </div>
                         </li>
                     </ul>
                 </li>
             </ul>
         </div>
-        <shop-cart v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
+        <shop-cart :select-foods="selectFoods" v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
     </div>
 
 </template>
@@ -44,6 +47,7 @@
     import BScroll from 'better-scroll';
     import api from '../../api/api';
     import shopCart from '../shopcart/shopcart.vue';
+    import cartControl from '../cartcontrol/cartcontrol.vue';
     const ERR_OK = 0;
     export default {
         props:{
@@ -60,7 +64,8 @@
             }
         },
         components:{
-            shopCart
+            shopCart,
+            cartControl
         },
         computed:{
             currentIndex(){
@@ -74,6 +79,17 @@
 
                 }
                 return 0;
+            },
+            selectFoods(){
+                let foods = [];
+                this.goods.forEach((good) => {
+                    good.foods.forEach((food) => {
+                        if (food.count){
+                            foods.push(food)
+                        }
+                    } )
+                })
+                return foods;
             }
         },
         created(){
@@ -99,13 +115,15 @@
                 let foodsList = this.$refs.foodsWrapper.getElementsByClassName('foods-list-hook');
                 let el = foodsList[index];
                 this.foodsScroll.scrollToElement(el,300);
-                console.log(index,event)
             },
             _initScroll:function () {
                 this.menuScroll = new BScroll(this.$refs.menuWrapper,{
                     click:true
                 });
-                this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{probeType:3});
+                this.foodsScroll = new BScroll(this.$refs.foodsWrapper,{
+                    click:true,
+                    probeType:3
+                });
                 this.foodsScroll.on('scroll',(pos) => {
                     this.scrollY =Math.abs(Math.round(pos.y));
                 });
@@ -227,5 +245,9 @@
                             color: rgb(147, 153, 159)
 
 
+                    .cartcontrol-wrapper
+                        position: absolute
+                        right:0
+                        bottom:12px
 
 </style>
