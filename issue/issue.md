@@ -78,4 +78,11 @@ Vue.prototype.$http = axios;
     </div>
  </transition>
 ```
-
+#### 如果有v-for须使用 transition-group
+```
+<transition-group name="drop">
+    <div v-for="(ball,key) in balls" v-show="ball.show" :key="key">
+        <div class="inner inner-hook"></div>
+    </div>
+</transition-group>
+```

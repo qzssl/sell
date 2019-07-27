@@ -30,7 +30,7 @@
                                     <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                                 </div>
                                 <div class="cartcontrol-wrapper">
-                                    <cart-control :food="food"></cart-control>
+                                    <cart-control :food="food" v-on:cartAdd="cartAdd"></cart-control>
                                 </div>
                             </div>
                         </li>
@@ -38,7 +38,7 @@
                 </li>
             </ul>
         </div>
-        <shop-cart :select-foods="selectFoods" v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
+        <shop-cart ref="shopcart" :select-foods="selectFoods" v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
     </div>
 
 </template>
@@ -88,7 +88,7 @@
                             foods.push(food)
                         }
                     } )
-                })
+                });
                 return foods;
             }
         },
@@ -110,7 +110,7 @@
                 })
         },
         methods:{
-            selectMenu:function(index,event){
+            selectMenu:function(index){
                 // if (event._constructed)return;
                 let foodsList = this.$refs.foodsWrapper.getElementsByClassName('foods-list-hook');
                 let el = foodsList[index];
@@ -137,6 +137,12 @@
                     height += item.clientHeight;
                     this.listHeight.push(height)
                 }
+            },
+            _drop(target){
+                this.$refs.shopcart.drop(target)
+            },
+            cartAdd(target){
+                this._drop(target)
             }
         }
     };
