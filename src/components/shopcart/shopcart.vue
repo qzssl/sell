@@ -1,6 +1,6 @@
 <template>
     <div class="shopcart">
-        <div class="content">
+        <div class="content" @click="toggleList">
             <div class="content-left">
                 <div class="logo-wrapper">
                     <div class="logo" :class="{'highLight':totalCount>0}">
@@ -16,24 +16,46 @@
                     {{payDesc}}
                 </div>
             </div>
-            <div class="ball-container">
-                <transition-group name="drop"
-                                  @before-enter="beforeEnter"
-                                  @enter="enter"
-                                  @after-enter="afterEnter"
-
-                >
-                    <div v-for="(ball,key) in balls" v-show="ball.show" :key="key" class="ball">
-                        <div class="inner inner-hook"></div>
-                    </div>
-                </transition-group>
-            </div>
         </div>
+        <div class="ball-container">
+            <transition-group name="drop"
+                              @before-enter="beforeEnter"
+                              @enter="enter"
+                              @after-enter="afterEnter"
+            >
+                <div v-for="(ball,index) in balls" v-bind:key="'balls'+index" v-show="ball.show" class="ball">
+                    <div class="inner inner-hook"></div>
+                </div>
+            </transition-group>
+        </div>
+        <transition name="fold">
+            <div class="shopcart-list" v-show="listShow">
+                <div class="list-header">
+                    <h1 class="title">购物车</h1>
+                    <span class="empty">清空</span>
+                </div>
+                <div class="list-content">
+                    <ul>
+                        <li class="food" v-for="(food,index) in selectFoods" v-bind:key="index">
+                            <span class="name">{{food.name}}</span>
+                            <div class="price">
+                                <span>￥{{food.price*food.count}}</span>
+                            </div>
+                            <div class="cartcontrol-wrapper">
+                                <cartcontrol :food="food"></cartcontrol>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
+    import Cartcontrol from "../cartcontrol/cartcontrol";
     export default {
+        components: {Cartcontrol},
         props:{
             selectFoods:{type:Array,default(){
                 return [
@@ -46,24 +68,18 @@
         data(){
             return {
                 balls:[// 使用balls存放5个小球，这些小球的默认状态都是不显示的
-                    {
-                        show:false
-                    },
-                    {
-                        show: false
-                    },
-                    {
-                        show: false
-                    },
-                    {
-                        show: false
-                    },
-                    {
-                        show: false
-                    }
+                    {show:false},
+                    {show: false},
+                    {show: false},
+                    {show: false},
+                    {show: false}
                 ],
-                dropBalls: []//已经在下降的小球存在这里
+                dropBalls: [],//已经在下降的小球存在这里
+                fold:true,//购物车列表显示或隐藏状态，默认隐藏
             }
+        },
+        watch:{
+
         },
         computed:{
             totalPrice:function () {
@@ -96,6 +112,14 @@
                 } else {
                     return 'enough'
                 }
+            },
+            listShow:function () {
+                if (!this.totalCount){ //购物车没有商品
+                    this.fold = true;//隐藏
+                    return false;
+                }
+                let show = !this.fold;
+                return show;
             }
         },
         methods:{
@@ -130,7 +154,7 @@
                 }
 
             },
-            enter(el,done){ //出现中
+            enter(el){ //出现中
                 /* eslint-disable no-unused-vars */
                 // 触发浏览器重绘
                 let rf = el.offsetHeight;
@@ -140,7 +164,6 @@
                     let inner = el.getElementsByClassName('inner-hook')[0];
                     inner.style.webkitTransform = 'translate3d(0,0,0)';
                     inner.style.transform = 'translate3d(0,0,0)';
-                    el.addEventListener('transitionend', done)
                 });
             },
             afterEnter(el){ //出现后
@@ -150,6 +173,12 @@
                     el.style.display = 'none';
                 }
             },
+            toggleList(){
+                if (!this.totalCount){//没有选商品
+                    return;
+                }
+                this.fold = !this.fold;
+            }
         }
     }
 
@@ -249,19 +278,39 @@
                         color:#fff
                     &.not-enough
                         background: #2b333b
-            .ball-container
-                .ball
-                    position: fixed
-                    left:32px
-                    bottom:22px
-                    z-index: 200
-                    &.drop-enter-active
-                        transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
-                    .inner
-                        display :block
-                        width:16px
-                        height:16px
-                        background :rgb(0,160,220)
-                        border-radius :50%
-                        transition: all 0.4s linear
+        .ball-container
+            .ball
+                position: fixed
+                left:32px
+                bottom:22px
+                z-index: 200
+                &.drop-enter-active
+                    transition: all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.41)
+                .inner
+                    display :block
+                    width:16px
+                    height:16px
+                    background :rgb(0,160,220)
+                    border-radius :50%
+                    transition: all 0.4s linear
+
+        .shopcart-list
+            position: absolute
+            left:0
+            top: 0
+            z-index: -1
+            background-color: #fff
+            width: 100%
+            height: 100px
+            transform :translate3d(0, -100%, 0)
+            &.fold-enter-active
+                transition: all .5s
+                transform: translate3d(0, -100%, 0)
+            &.fold-leave-active
+                transition: all .5s
+            &.fold-enter,&.fold-leave-to
+                transform: translate3d(0, 0, 0)
+            &.fold-enter-to,&.fold-leave
+                transform: translate3d(0, -100%, 0)
+
 </style>

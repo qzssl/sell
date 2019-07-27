@@ -86,3 +86,19 @@ Vue.prototype.$http = axios;
     </div>
 </transition-group>
 ```
+#### 报错Do not use v-for index as key on <transition-group> children, this is the same as not using keys.
+在<transition-group>的子元素上，不能使用v-for的index作为key
+修改：
+```
+<div v-for="(ball,key) in balls">
+    <transition-group name="drop"
+                      @before-enter="beforeEnter"
+                      @enter="enter"
+                      @after-enter="afterEnter"
+    >
+        <div v-show="ball.show" :key="'balls'+index" class="ball">
+            <div class="inner inner-hook"></div>
+        </div>
+    </transition-group>
+</div>
+```
