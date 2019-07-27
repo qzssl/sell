@@ -102,3 +102,42 @@ Vue.prototype.$http = axios;
     </transition-group>
 </div>
 ```
+####  Unexpected side effect in "listShow" computed property
+```出错
+listShow:function () {
+  if (!this.totalCount){ //购物车没有商品
+    this.fold = true;//隐藏
+     return false;
+  }
+    let show = !this.fold;
+}
+```
+修改：使用get,set
+```
+// 页面初始化时会先执行一次 get
+// 监视 data 中 fold 和 totalCount 的属性值，只有发生改变时，它们才会重新求值，否则取缓存中的
+get(){
+    if (!this.totalCount){ //购物车没有商品
+        return false;
+    }
+    return !this.fold;
+},
+// 监视当前属性值的变化，当属性值发生变化时执行，更新相关的属性数据，类似于 watch 的功能
+set(){
+    if (!this.totalCount){
+        this.fold = true;//隐藏
+        return false;
+    }
+    let show = !this.fold;
+    return show
+}
+
+```
+#### 阻止冒泡 @click.stop.prevent="pay"
+```
+<div class="content-right" @click.stop.prevent="pay">
+    <div class="pay" :class="payClass">
+        {{payDesc}}
+    </div>
+</div>
+```
