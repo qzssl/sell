@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="shopcart-wrapper">
         <div class="shopcart">
             <div class="content" @click="toggleList">
                 <div class="content-left">
@@ -35,7 +35,7 @@
                         <h1 class="title">购物车</h1>
                         <span class="empty" @click="empty">清空</span>
                     </div>
-                    <div class="list-content" ref="list-content">
+                    <div class="list-content" ref="listContent">
                         <ul>
                             <li class="food" v-for="(food,index) in selectFoods" v-bind:key="index">
                                 <span class="name">{{food.name}}</span>
@@ -86,9 +86,6 @@
                 fold:true,//购物车列表显示或隐藏状态，默认隐藏
             }
         },
-        watch:{
-
-        },
         computed:{
             totalPrice:function () {
                 let total = 0;
@@ -126,15 +123,7 @@
                 // 监视 data 中 fold 和 totalCount 的属性值，只有发生改变时，它们才会重新求值，否则取缓存中的
                 get(){
                     if (!this.totalCount){ //购物车没有商品
-                        return false;
-                    }
-                    return !this.fold;
-                },
-                // 监视当前属性值的变化，当属性值发生变化时执行，更新相关的属性数据，类似于 watch 的功能
-                set(){
-                    console.log(222)
-                    if (!this.totalCount){
-                        this.fold = true;//隐藏
+                        this.fold = true;
                         return false;
                     }
                     let show = !this.fold;
@@ -150,14 +139,16 @@
 
                         })
                     }
-                    return show
+                    return show;
+                },
+                // 监视当前属性值的变化，当属性值发生变化时执行，更新相关的属性数据，类似于 watch 的功能
+                set(){
                 }
             }
         },
         methods:{
             // 当触发drop方法时小球开始掉落
             drop(el){
-                this.show = true;
                 for (let i=0;i<this.balls.length;i++){
                     let ball = this.balls[i];
                     if (!ball.show){
@@ -169,6 +160,7 @@
                 }
             },
             beforeEnter(el){ //出现前
+                // window.console.log(el)
                 let count = this.balls.length;
                 while (count--){
                     let ball = this.balls[count];
@@ -211,7 +203,7 @@
                 }
                 this.fold = !this.fold;
             },
-            empty(){
+            empty(){//清空购物车
                 this.selectFoods.forEach((food) => {
                     food.count = 0;
                 })

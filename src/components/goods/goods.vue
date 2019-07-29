@@ -14,7 +14,7 @@
                 <li v-for="(item,index) in goods" :key="index" class="foods-list foods-list-hook">
                     <h1 class="title">{{item.name}}</h1>
                     <ul>
-                        <li v-for="(food,key) in item.foods" class="food-item border-1px" :key="key">
+                        <li v-for="(food,key) in item.foods" @click="selectFood(food)" class="food-item border-1px" :key="key">
                             <div class="icon">
                                 <img :src="food.icon" width="57" height="57">
                             </div>
@@ -39,6 +39,7 @@
             </ul>
         </div>
         <shop-cart ref="shopcart" :select-foods="selectFoods" v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
+        <food v-bind:food="selectedFood" ref="foodChild" v-on:cartAdd="cartAdd" v-on:addFirst="cartAdd"></food>
     </div>
 
 </template>
@@ -48,6 +49,7 @@
     import api from '../../api/api';
     import shopCart from '../shopcart/shopcart.vue';
     import cartControl from '../cartcontrol/cartcontrol.vue';
+    import food from "../food/food";
     const ERR_OK = 0;
     export default {
         props:{
@@ -60,10 +62,12 @@
                 goods:[],
                 classMap:['decrease','discount','guarantee','invoice','special'],
                 listHeight:[],
-                scrollY:0
+                scrollY:0,
+                selectedFood:{}
             }
         },
         components:{
+            food,
             shopCart,
             cartControl
         },
@@ -143,6 +147,11 @@
             },
             cartAdd(target){
                 this._drop(target)
+            },
+            selectFood(food){
+                this.selectedFood = food;
+                window.console.log( this.$refs.foodChild)
+                this.$refs.foodChild.show();
             }
         }
     };

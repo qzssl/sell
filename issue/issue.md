@@ -58,6 +58,9 @@ Vue.prototype.$http = axios;
           url('../../common/fonts/sell-icon.svg?ze40eg#sell-icon') format('svg')
 ```
 #### 动画 transition要放在需要的v-show元素外面
+>出现的过程: name-enter(初始态) => name-enter-active(中间态) => name-enter-to(终止态)
+>消失的过程: name-leave => name-leave-active => name-leave-to
+
 >错误：
 ```
 <div class="cart-decrease" @click="decreaseCart" v-show="food.count>0">
