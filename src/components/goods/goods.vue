@@ -150,7 +150,7 @@
             },
             selectFood(food){
                 this.selectedFood = food;
-                window.console.log( this.$refs.foodChild)
+                // window.console.log( this.$refs.foodChild)
                 this.$refs.foodChild.show();
             }
         }

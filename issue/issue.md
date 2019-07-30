@@ -144,3 +144,48 @@ set(){
     </div>
 </div>
 ```
+#### 报错：组件内不能修改props的值，同时修改的值也不会同步到组件外层，即调用组件方不知道组件内部当前的状态是什么
+```
+Avoid mutating a prop directly since the value will be overwritten whenever the parent component re-renders. Instead, use a data or computed property based on the prop's value. Prop being mutated: "selectType"
+```
+修改：在data返回
+```
+props:{
+    selectType:{
+        type: Number,
+        default:ALL
+    }
+},
+data(){
+    return {
+        selectedType:this.selectType
+    }
+},
+```
+#### 从父组件传过来的值更新了，如果在data中引用，此时data没有响应更新值，需要用watch监听
+```
+props:{
+    selectType:{
+        type: Number,
+        default:ALL
+    },
+    onlyContent:{
+        type:Boolean,
+        default:false
+    }
+},
+data(){
+    return {
+        selectedType:this.selectType,
+        onlyContents:this.onlyContent
+    }
+},
+watch:{
+    selectType(type){
+        this.selectedType = type;
+    },
+    onlyContent(bol){
+        this.onlyContents = bol;
+    }
+},
+```

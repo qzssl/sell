@@ -35,7 +35,26 @@
                 <split></split>
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-                    <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"></ratingselect>
+                    <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"
+                                  v-on:select="select" v-on:toggle="toggle"
+                    ></ratingselect>
+                    <div class="rating-wrapper">
+                        <ul v-show="food.ratings && food.ratings.length">
+                            <li v-for="(rating,index) in food.ratings" v-show="needShow(rating.rateType,rating.text)" class="rating-item border-1px" :key="index">
+                                <div class="user">
+                                    <span class="name">{{rating.username}}</span>
+                                    <img :src="rating.avatar" width="12" height="12" alt="" class="avatar">
+                                </div>
+                                <div class="time">{{rating.rateTime | formatDate}}</div>
+                                <p class="text">
+                                    <span :class="{'icon-thumb_up':rating.rateType === 0,'icon-thumb_down':rating.rateType === 1}"></span>{{rating.text}}
+                                </p>
+                            </li>
+                        </ul>
+                        <div class="no-rating" v-show="!food.ratings || !food.ratings.length">
+                            暂无评价
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -49,11 +68,19 @@
     import cartcontrol from "../cartcontrol/cartcontrol.vue";
     import split from '../split/split.vue';
     import ratingselect from '../ratingselect/ratingselect.vue';
-    const POSITIVE = 0;
-    const NEGATIVE = 1;
+    import {formatDate} from '../../common/js/date';
+    // const POSITIVE = 0;
+    // const NEGATIVE = 1;
     const ALL = 2;
     export default {
         components: {cartcontrol,split,ratingselect},
+        filters:{
+            formatDate(time){
+                let date = new Date(time);
+                window.console.log(date,formatDate(date,'yyyy-mm-dd hh:mm'));
+                return formatDate(date,'yyyy-MM-dd hh:mm');
+            }
+        },
         props:{
             food:{
                 type:Object
@@ -76,6 +103,7 @@
                 this.showFlag = true;
                 this.selectType = ALL;
                 this.onlyContent = true;
+                window.console.log("是否渲染",this.selectType)
                 this.$nextTick(()=>{
                     if (!this.scroll){
                         this.scroll = new BScroll(this.$refs.food,{
@@ -96,6 +124,29 @@
             },
             cartAdd(event){
                 this.$emit('cartAdd',event);
+            },
+            needShow(type,text){
+                if (this.onlyContent && !text){
+                    return false;
+                }
+                if (this.selectType === ALL){
+                    this.selectType = ALL;
+                    return true;
+                } else {
+                    return type === this.selectType;
+                }
+            },
+            select(type){
+                this.selectType = type;
+                this.$nextTick(()=>{
+                    this.scroll.refresh();
+                })
+            },
+            toggle(onlyContent){
+                this.onlyContent = onlyContent;
+                this.$nextTick(()=>{
+                    this.scroll.refresh();
+                })
             }
         }
     }
@@ -103,6 +154,7 @@
 
 <style scoped lang="stylus">
     @import "../../common/stylus/icon.styl"
+    @import "../../common/stylus/base.styl"
     .food
         position: fixed
         left:0
@@ -208,5 +260,46 @@
                 margin-left:18px
                 font-size:14px
                 color:rgb(7,17,27)
+            .rating-wrapper
+                padding:0 18px
+                .rating-item
+                    position: relative
+                    padding:16px 0
+                    border-1px(rgba(7,17,27,0.1))
+                    .user
+                        position: absolute
+                        top:12px
+                        right:0
+                        font-size: 0
+                        line-height:12px
+                        .name
+                            display: inline-block
+                            margin-right: 6px
+                            font-size:10px
+                            color:rgb(147,153,159)
+                            vertical-align: top
+                    .time
+                        line-height:12px
+                        font-size:10px
+                        margin-bottom: 6px
+                        color:rgb(147,153,159)
+                    .text
+                        font-size:12px
+                        color:rgb(7,17,27)
+                        line-height:16px
+                        .icon-thumb_up, .icon-thumb_down
+                            margin-right: 4px
+                            line-height: 16px
+                            font-size: 12px
+                        .icon-thumb_up
+                            color: rgb(0, 160, 220)
+                        .icon-thumb_down
+                            color: rgb(147, 153, 159)
 
+
+
+                .no-rating
+                    padding:16px 0
+                    font-size:12px
+                    color: rgb(147, 153, 159)
 </style>

@@ -1,22 +1,22 @@
 <template>
     <div class="ratingselect">
         <div class="rating-type border-1px">
-            <span @click="select(2)" class="block positive" :class="{'active':selectType===2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
-            <span @click="select(0)" class="block positive" :class="{'active':selectType===0}">{{desc.positive}}<span class="count">{{positive.length}}</span></span>
-            <span @click="select(1)" class="block negative" :class="{'active':selectType===1}">{{desc.negative}}<span class="count">{{negative.length}}</span></span>
+            <span @click="select(2)" class="block positive" :class="{'active':selectedType===2}">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
+            <span @click="select(0)" class="block positive" :class="{'active':selectedType===0}">{{desc.positive}}<span class="count">{{positive.length}}</span></span>
+            <span @click="select(1)" class="block negative" :class="{'active':selectedType===1}">{{desc.negative}}<span class="count">{{negative.length}}</span></span>
         </div>
-        <div @click="toggleContent" class="switch" :class="{'on':onlyContent}">
+        <div @click="toggleContent" class="switch" :class="{'on':onlyContents}">
             <span class="icon-check_circle"></span>
             <span class="text">只看有内容的评价</span>
         </div>
-
+        <div class=""></div>
     </div>
 </template>
 
 <script>
-    const POSITIVE = 0;
-    const NEGATIVE = 1;
-    const ALL = 2;
+    const POSITIVE = 0;//推荐
+    const NEGATIVE = 1;//吐槽
+    const ALL = 2;//全部
     export default {
         props:{
             ratings:{
@@ -44,10 +44,24 @@
                 }
             }
         },
+        data(){
+            return {
+                selectedType:this.selectType,
+                onlyContents:this.onlyContent
+            }
+        },
+        watch:{
+            selectType(type){
+                this.selectedType = type;
+            },
+            onlyContent(bol){
+                this.onlyContents = bol;
+            }
+        },
         computed:{
             positive(){
                 return this.ratings.filter((rating)=>{
-                    window.console.log(rating.rateType === POSITIVE);
+                    // window.console.log(rating.rateType === POSITIVE);
                     return rating.rateType === POSITIVE;
                 })
             },
@@ -59,12 +73,12 @@
         },
         methods:{
             select(type){
-                this.selectType = type;
-                this.$emit('ratingtype.select',type);
+                this.selectedType = type;
+                this.$emit('select',type);
             },
             toggleContent(){
-                this.onlyContent = !this.onlyContent;
-                this.$emit('content.toggle',this.onlyContent);
+                this.onlyContents = !this.onlyContents;
+                this.$emit('toggle',this.onlyContents);
             }
         }
     }
