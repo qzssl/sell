@@ -77,7 +77,7 @@
         filters:{
             formatDate(time){
                 let date = new Date(time);
-                window.console.log(date,formatDate(date,'yyyy-mm-dd hh:mm'));
+                //window.console.log(date,formatDate(date,'yyyy-mm-dd hh:mm'));
                 return formatDate(date,'yyyy-MM-dd hh:mm');
             }
         },
@@ -103,7 +103,7 @@
                 this.showFlag = true;
                 this.selectType = ALL;
                 this.onlyContent = true;
-                window.console.log("是否渲染",this.selectType)
+                //window.console.log("是否渲染",this.selectType)
                 this.$nextTick(()=>{
                     if (!this.scroll){
                         this.scroll = new BScroll(this.$refs.food,{

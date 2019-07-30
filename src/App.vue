@@ -37,7 +37,7 @@
           var self =this;
           api.get('/api/seller')
               .then((res) => {
-                  window.console.log(res)
+                  // window.console.log(res)
                   if (res.data.errno===ERR_OK){
                       self.seller=res.data.data;
 
