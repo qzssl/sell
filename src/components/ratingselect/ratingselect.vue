@@ -90,7 +90,7 @@
     .ratingselect
         .rating-type
             padding:18px 0
-            margin0 18px
+            margin: 18px
             border-1px(rgba(7,17,270,.1))
             font-size:0
             .block
@@ -114,9 +114,6 @@
                     background: rgba(77,85,93,0.2)
                     &.active
                         background: rgb(77, 85, 93)
-
-
-
         .switch
             padding:12px 18px
             line-height:24px

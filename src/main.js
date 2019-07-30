@@ -25,7 +25,7 @@ const router = new VueRouter({
     linkActiveClass:'router-link-active'
 });
 // 想要导航到路由
-router.push({path:'/goods'});
+// router.push({path:'/goods'});
 
 // 4. 创建和挂载根实例。
 // 记得要通过 router 配置参数注入路由，
