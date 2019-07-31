@@ -18,29 +18,36 @@
     </div>-->
     <!-- 路由出口 -->
     <!-- 路由匹配到的组件将渲染在这里 -->
-    <router-view v-bind:seller="seller"></router-view>
+    <keep-alive>
+      <router-view v-bind:seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import header from './components/header/header.vue';
   import api from './api/api';
+  import {urlParam} from "./common/js/util";
+
   const ERR_OK = 0;
   //简写  header:header
   export default {
       data() {
           return {
-              seller:{}
+              seller:{
+                  id:(() => {
+                      let queryParam = urlParam();
+                      return queryParam.id;
+                  })()
+              }
           }
       },
       created() {
           var self =this;
           api.get('/api/seller')
               .then((res) => {
-                  // window.console.log(res)
                   if (res.data.errno===ERR_OK){
-                      self.seller=res.data.data;
-
+                      self.seller=Object.assign({},self.seller,res.data.data) ;
                   }
               })
               .catch((err) => {

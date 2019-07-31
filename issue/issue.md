@@ -189,3 +189,9 @@ watch:{
     }
 },
 ```
+#### 页面缓存
+```
+    <keep-alive>
+      <router-view v-bind:seller="seller"></router-view>
+    </keep-alive>
+```

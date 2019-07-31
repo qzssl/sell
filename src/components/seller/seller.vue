@@ -28,6 +28,10 @@
                         </div>
                     </li>
                 </ul>
+                <div class="favorite" @click="toggleFavorite">
+                    <span class="icon-favorite" :class="{'active':favorite}"></span>
+                    <span class="text">{{favoriteText}}</span>
+                </div>
             </div>
             <split></split>
             <div class="bulletin">
@@ -52,7 +56,13 @@
                         </li>
                     </ul>
                 </div>
-
+            </div>
+            <split></split>
+            <div class="info">
+                <h1 class="title border-1px">商家信息</h1>
+                <ul>
+                    <li class="info-item" v-for="(info,index) in seller.infos" :key="index">{{info}}</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -62,6 +72,7 @@
     import star from '../star/star.vue';
     import split from '../split/split.vue';
     import BScroll from 'better-scroll';
+    import {saveToLocal, loadFromLocal} from '../../common/js/store';
     export default {
         props:{
             seller:{type:Object}
@@ -71,43 +82,71 @@
         },
         data(){
             return {
-                sel:this.seller
+                favorite: (()=>{
+                    return loadFromLocal(this.seller.id,'favorite', false);
+                })()
             }
         },
+        computed: {
+            favoriteText() {
+                return this.favorite ? '已收藏' : '收藏';
+            }
+        },
+        watch:{
+          seller:function () {
+              this.initBScroll();
+              this.initPics();
+          }
+        },
         created() {
-            console.log(this.seller)
             this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
         },
         mounted(){
-            if (!this.scroll){
-                this.scroll = new BScroll(this.$refs.seller,{
-                    click:true
-                })
-            } else {
-                this.scroll.refresh();
-            }
-            if (this.seller.pics){
-                let picwidth = 120;
-                let margin = 6;
-                let width = (picwidth+margin)*this.seller.pics.length-margin;
-                this.$refs.picList.style.width = width+'px';
-                this.$nextTick(()=>{
-                    if (!this.picScroll) {
-                        this.picScroll = new BScroll(this.$refs.picWrapper, {
-                            scrollX: true,
-                            eventPassthrough: 'vertical'
-                        });
-                    } else {
-                        this.picScroll.refresh();
-                    }
-                })
-            }
+            this.initBScroll();//整个页面上下滚动
+            this.initPics();//商家实景水平滚动
+        },
+        methods:{
+            initBScroll:function () {
+                if (!this.scroll){
+                    this.scroll = new BScroll(this.$refs.seller,{
+                        click:true
+                    })
+                } else {
+                    this.scroll.refresh();
+                }
+            },
+            initPics:function () {
+                if (this.seller.pics){
+                    let picwidth = 120;
+                    let margin = 6;
+                    let width = (picwidth+margin)*this.seller.pics.length-margin;
+                    this.$refs.picList.style.width = width+'px';
+                    this.$nextTick(()=>{
+                        if (!this.picScroll) {
+                            this.picScroll = new BScroll(this.$refs.picWrapper, {
+                                scrollX: true,
+                                eventPassthrough: 'vertical'
+                            });
+                        } else {
+                            this.picScroll.refresh();
+                        }
+                    })
+                }
+            },
+            toggleFavorite(event) {
+                if (!event._constructed) {
+                    return;
+                }
+                this.favorite = !this.favorite;
+                saveToLocal(this.seller.id, 'favorite', this.favorite);
+            },
         }
     }
 </script>
 
 <style scoped lang="stylus">
     @import "../../common/stylus/base.styl"
+    @import "../../common/stylus/icon.styl"
     .seller
         position: absolute
         top:174px
@@ -158,6 +197,24 @@
                         .stress
                             font-size: 24px
 
+            .favorite
+                position: absolute
+                width: 50px
+                right: 11px
+                top: 18px
+                text-align: center
+                .icon-favorite
+                    display: block
+                    margin-bottom:4px
+                    line-height:24px
+                    font-size:24px
+                    color: #d4d6d9
+                    &.active
+                        color:rgb(240,20,20)
+                .text
+                    line-height: 10px
+                    font-size: 10px
+                    color: rgb(77, 85, 93)
         .bulletin
             padding: 18px 18px 0 18px
             .title
@@ -221,4 +278,19 @@
                         height: 90px
                         &:last-child
                             margin: 0
+        .info
+            padding: 18px 18px 0 18px
+            color: rgb(7, 17, 27)
+            .title
+                padding-bottom: 12px
+                line-height: 14px
+                border-1px(rgba(7, 17, 27, 0.1))
+                font-size: 14px
+            .info-item
+                padding: 16px 12px
+                line-height: 16px
+                border-1px(rgba(7, 17, 27, 0.1))
+                font-size: 12px
+                &:last-child
+                    border-none()
 </style>
