@@ -41,7 +41,6 @@
         <shop-cart ref="shopcart" :select-foods="selectFoods" v-bind:delivery-price="seller.deliveryPrice" v-bind:min-price="seller.minPrice"></shop-cart>
         <food v-bind:food="selectedFood" ref="foodChild" v-on:cartAdd="cartAdd" v-on:addFirst="cartAdd"></food>
     </div>
-
 </template>
 
 <script>

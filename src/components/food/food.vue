@@ -19,7 +19,7 @@
                         <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                     </div>
                     <div class="cartcontrol-wrapper">
-                        <cartcontrol :food="food" v-on:cartAdd="cartAdd"></cartcontrol>
+                        <cart-control :food="food" v-on:cartAdd="cartAdd"></cart-control>
                     </div>
                     <transition name="fade">
                         <div @click.stop.prevent="addFirst" class="buy" v-show="!food.count||food.count === 0">
@@ -35,9 +35,9 @@
                 <split></split>
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-                    <ratingselect :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"
+                    <rating-select :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="food.ratings"
                                   v-on:select="select" v-on:toggle="toggle"
-                    ></ratingselect>
+                    ></rating-select>
                     <div class="rating-wrapper">
                         <ul v-show="food.ratings && food.ratings.length">
                             <li v-for="(rating,index) in food.ratings" v-show="needShow(rating.rateType,rating.text)" class="rating-item border-1px" :key="index">
@@ -65,15 +65,15 @@
 <script>
     import BScroll from 'better-scroll';
     import Vue from 'vue';
-    import cartcontrol from "../cartcontrol/cartcontrol.vue";
+    import cartControl from "../cartcontrol/cartcontrol.vue";
     import split from '../split/split.vue';
-    import ratingselect from '../ratingselect/ratingselect.vue';
+    import ratingSelect from '../ratingselect/ratingselect.vue';
     import {formatDate} from '../../common/js/date';
     // const POSITIVE = 0;
     // const NEGATIVE = 1;
     const ALL = 2;
     export default {
-        components: {cartcontrol,split,ratingselect},
+        components: {cartControl,split,ratingSelect},
         filters:{
             formatDate(time){
                 let date = new Date(time);

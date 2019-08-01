@@ -25,9 +25,9 @@
                 </div>
             </div>
             <split></split>
-            <ratingselect :select-type="selectType" :only-content="onlyContent" :ratings="ratings"
+            <rating-select :select-type="selectType" :only-content="onlyContent" :ratings="ratings"
                           v-on:select="select" v-on:toggle="toggle"
-            ></ratingselect>
+            ></rating-select>
             <div class="rating-wrapper">
                 <ul>
                     <li class="rating-item" v-for="(rating,index) in ratings" v-show="needShow(rating.rateType,rating.text)" :key="index">
@@ -59,7 +59,7 @@
 <script>
     import star from '../star/star.vue';
     import split from '../split/split.vue';
-    import ratingselect from '../ratingselect/ratingselect.vue';
+    import ratingSelect from '../ratingselect/ratingselect.vue';
     import api from '../../api/api';
     import {formatDate} from '../../common/js/date';
     import BScroll from 'better-scroll';
@@ -72,7 +72,7 @@
             }
         },
         components:{
-            star,split,ratingselect
+            star,split,ratingSelect
         },
         filters:{
             formatDate(time){
