@@ -1,6 +1,6 @@
 #### 命令行窗口输入 npm install vue-cli -g 出现错误
-![](https://github.com/qzssl/sell/blob/master/issue/images/)AUL4R`K03}K%3BHFJ(CAO7.png)
-重装node
+![](./images/)AUL4R%60K03%7DK%253BHFJ(CAO7.png)
+>解决：重装node
 #### 安装全局vue-cli
 ```
 npm install -g @vue/cli

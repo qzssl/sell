@@ -14,7 +14,6 @@ import BScroll from 'better-scroll';
 </div>
 
 //获取
-```
 methods:{
     _initScroll:function () {
         this.menuScroll = new BScroll(this.$refs.menuWrapper,{})

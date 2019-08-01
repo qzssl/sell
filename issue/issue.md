@@ -1,6 +1,7 @@
-#### Do not use built-in or reserved HTML elements as component id: header
->组件，不能和html标签重复
->header组件，h5新标签重复
+####错误1: Do not use built-in or reserved HTML elements as component id: header
+>组件，不能和html标签重复<br>
+>header组件名与h5新标签header重复<br>
+* 修改
 App.vue
 ```
    <v-header></v-header>
@@ -20,32 +21,14 @@ header.vue
  }
 ```
 
-#### vue3.x引入组件inport时组件必须带.vue后缀 否则就报错
-#### vue依赖的插件会帮忙CSS做出兼容
-#### 路由
-```
-import VueRouter from 'vue-router';
-//注册插件
-Vue.use(VueRouter);
-import goods from './components/goods/goods.vue';
-const routes = [
-    {path:'/goods',component:goods}
-];
-const router = new VueRouter({ routes});
-new Vue({
-    router
-}).$mount('#app');
-```
-#### 设置默认路由 main.js
-```
-//想要导航到的路由
-router.push({path:'/goods'});
-```
+####错误2： vue3.x引入组件inport时组件必须带.vue后缀 否则就报错
+
 #### axios不能通过Vue.use(axios)的方式引入, 如果想在所有组件中直接使用axios, 可以这样设置
 ```
 import axios from 'axios';
 Vue.prototype.$http = axios;
 ```
+
 #### 使用 icon 字体图标出现小方块问题
 修改路径
 ```
@@ -58,16 +41,14 @@ Vue.prototype.$http = axios;
           url('../../common/fonts/sell-icon.svg?ze40eg#sell-icon') format('svg')
 ```
 #### 动画 transition要放在需要的v-show元素外面
->出现的过程: name-enter(初始态) => name-enter-active(中间态) => name-enter-to(终止态)
+>出现的过程: name-enter(初始态) => name-enter-active(中间态) => name-enter-to(终止态)<br>
 >消失的过程: name-leave => name-leave-active => name-leave-to
 
 >错误：
 ```
 <div class="cart-decrease" @click="decreaseCart" v-show="food.count>0">
     <transition name="move">
-        <span class="inner icon-remove_circle_outline">
-
-        </span>
+        <span class="inner icon-remove_circle_outline"></span>
     </transition>
 </div>
 ```
@@ -75,9 +56,7 @@ Vue.prototype.$http = axios;
 ```
 <transition name="move">
     <div class="cart-decrease" @click="decreaseCart" v-show="food.count>0">
-        <span class="inner icon-remove_circle_outline">
-
-        </span>
+        <span class="inner icon-remove_circle_outline"></span>
     </div>
  </transition>
 ```
@@ -90,7 +69,7 @@ Vue.prototype.$http = axios;
 </transition-group>
 ```
 #### 报错Do not use v-for index as key on <transition-group> children, this is the same as not using keys.
-在<transition-group>的子元素上，不能使用v-for的index作为key
+在`<transition-group>`的子元素上，不能使用v-for的index作为key
 修改：
 ```
 <div v-for="(ball,key) in balls">
@@ -105,8 +84,9 @@ Vue.prototype.$http = axios;
     </transition-group>
 </div>
 ```
-####  Unexpected side effect in "listShow" computed property
-```出错
+####错误： Unexpected side effect in "listShow" computed property
+```
+//出错
 listShow:function () {
   if (!this.totalCount){ //购物车没有商品
     this.fold = true;//隐藏
@@ -136,14 +116,7 @@ set(){
 }
 
 ```
-#### 阻止冒泡 @click.stop.prevent="pay"
-```
-<div class="content-right" @click.stop.prevent="pay">
-    <div class="pay" :class="payClass">
-        {{payDesc}}
-    </div>
-</div>
-```
+
 #### 报错：组件内不能修改props的值，同时修改的值也不会同步到组件外层，即调用组件方不知道组件内部当前的状态是什么
 ```
 Avoid mutating a prop directly since the value will be overwritten whenever the parent component re-renders. Instead, use a data or computed property based on the prop's value. Prop being mutated: "selectType"
@@ -188,10 +161,4 @@ watch:{
         this.onlyContents = bol;
     }
 },
-```
-#### 页面缓存
-```
-    <keep-alive>
-      <router-view v-bind:seller="seller"></router-view>
-    </keep-alive>
 ```
