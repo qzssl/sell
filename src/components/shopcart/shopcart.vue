@@ -86,6 +86,27 @@
                 fold:true,//购物车列表显示或隐藏状态，默认隐藏
             }
         },
+        watch:{
+            selectFoods(newFoods) {
+                if (newFoods.length === 0) {
+                    this.fold = true;
+                }
+            },
+            listShow() {
+                let show = !this.fold;
+                if (show) {
+                    this.$nextTick(() => {
+                        if (!this.scroll) {
+                            this.scroll = new BScroll(this.$refs.listContent, {
+                                click: true
+                            });
+                        } else {
+                            this.scroll.refresh();
+                        }
+                    });
+                }
+            }
+        },
         computed:{
             totalPrice:function () {
                 let total = 0;
@@ -123,22 +144,10 @@
                 // 监视 data 中 fold 和 totalCount 的属性值，只有发生改变时，它们才会重新求值，否则取缓存中的
                 get(){
                     if (!this.totalCount){ //购物车没有商品
-                        this.fold = true;
+                        // this.fold = true;
                         return false;
                     }
                     let show = !this.fold;
-                    if (show){
-                        this.$nextTick(() => {
-                            if (!this.scroll){
-                                this.scroll = new BScroll(this.$refs.listContent,{
-                                    click:true
-                                })
-                            } else{
-                                this.scroll.refresh();
-                            }
-
-                        })
-                    }
                     return show;
                 },
                 // 监视当前属性值的变化，当属性值发生变化时执行，更新相关的属性数据，类似于 watch 的功能
@@ -176,7 +185,6 @@
                         inner.style.transform = `translate3d(${x}px,0,0)`;
                     }
                 }
-
             },
             enter(el){ //出现中
                 /* eslint-disable no-unused-vars */

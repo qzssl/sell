@@ -162,3 +162,46 @@ watch:{
     }
 },
 ```
+#### 报错Unexpected side effect in "listShow" computed property
+这个错误报错原因：此规则旨在防止在计算属性中产生副作用的代码
+>解决办法： 使用watch监听属性
+```
+computed:{
+    listShow:{
+        // 页面初始化时会先执行一次 get
+        // 监视 data 中 fold 和 totalCount 的属性值，只有发生改变时，它们才会重新求值，否则取缓存中的
+        get(){
+            if (!this.totalCount){ //购物车没有商品
+                // this.fold = true;
+                return false;
+            }
+            let show = !this.fold;
+            return show;
+        },
+        // 监视当前属性值的变化，当属性值发生变化时执行，更新相关的属性数据，类似于 watch 的功能
+        set(){
+        }
+    }
+},
+watch:{
+    selectFoods(newFoods) {
+        if (newFoods.length === 0) {
+            this.fold = true;
+        }
+    },
+    listShow() {
+        let show = !this.fold;
+        if (show) {
+            this.$nextTick(() => {
+                if (!this.scroll) {
+                    this.scroll = new BScroll(this.$refs.listContent, {
+                        click: true
+                    });
+                } else {
+                    this.scroll.refresh();
+                }
+            });
+        }
+    }
+},
+```
