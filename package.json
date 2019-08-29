@@ -24,10 +24,11 @@
     "css-loader": "^3.1.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.36.1",
+    "eslint-utils": ">=1.4.1",
+    "stylus": "^0.54.7",
     "stylus-loader": "^3.0.1",
-    "stylus": "0.52.4"
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.36.1"
   },
   "eslintConfig": {
     "root": true,
